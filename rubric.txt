@@ -1,0 +1,59 @@
+Program Runs Without Error
+Performance levels:	Score:
+Yes	5
+Program compiles and runs without error.
+No	0
+Program has errors.
+Models Match Database
+Performance levels:	Score:
+Yes	5
+Models match the database.
+Partial	2.5
+There are errors in the models.
+No	0
+Models do not match the database.
+App Lists Books
+Performance levels:	Score:
+Yes	10
+App should list out all the books in the database
+No	0
+App does not list out the books in the database
+App Contains Dynamic Pagination
+Performance levels:	Score:
+Yes	15
+App dynamically builds the link tags based on the number of items in the data set.
+Manual Links	7.5
+App uses static links for pagination.
+Partial	7.5
+Dynamic Links are not working properly to generate the links to the different pages.
+No	0
+Missing Pagination.
+App Allows User to Sort Books
+Performance levels:	Score:
+Yes	5
+The app gives the user the ability to sort by Book Title.
+Partial	2.5
+Sorting does not function properly.
+No	0
+The ability to sort by Book Title is missing.
+App is Styled with Bootstrap
+Performance levels:	Score:
+Yes	5
+App uses Bootstrap to style the page.
+Partial	2.5
+App is partially styled.
+No	0
+App is missing Bootstrap styling.
+Code is Clean
+Performance levels:	Score:
+Yes	5
+Good readability (good variable names, line spacing, commenting, etc.)
+Some Problems	2.5
+Some readability issues.
+No	0
+Major Readability Issues.
+
+Final added requirement: 
+ in our React programs, we want to add our "node_modules" folder to our .gitignore file.  The "node_modules" file is massive, and it takes forever for the TAs to download as they are trying to grade your assignments and slows them down.  Huge pain.  So make sure that it gets excluded from GitHub.  So just go into your .gitignore file and add a new line that says:
+
+node_modules/

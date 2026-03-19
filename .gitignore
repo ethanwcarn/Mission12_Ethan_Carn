@@ -1,0 +1,13 @@
+node_modules/
+
+# IDE / tooling artifacts
+.vs/
+/.vscode/
+
+# Server build artifacts
+/server/bin/
+/server/obj/
+
+# Client build artifacts (if applicable)
+/client/dist/
+

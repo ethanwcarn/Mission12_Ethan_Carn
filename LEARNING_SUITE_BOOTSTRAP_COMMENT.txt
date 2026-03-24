@@ -1,7 +1,0 @@
-Copy/paste into your Learning Suite submission comment (required for Bootstrap #notcoveredinthevideos credit):
-
-1) Bootstrap Toast — After clicking "Add to cart" on the book list, a toast appears in the top-right (fixed toast container). Implemented in client/src/pages/BookListPage.tsx using the Toast JavaScript API (Toast.getOrCreateInstance) and the .toast / .toast-header / .toast-body markup.
-
-2) Bootstrap Offcanvas — On smaller viewports, use the "Cart summary" button above the book list to open an end offcanvas panel with the same cart summary and "View cart" link. Markup uses .offcanvas, .offcanvas-header, .offcanvas-body, and data-bs-toggle / data-bs-target. Bootstrap’s bundle JS is imported in client/src/main.tsx so offcanvas toggles work.
-
-Also note: The book list and cart summary use the Bootstrap grid (.container > .row > .col-lg-9 / .col-lg-3) as required for layout.

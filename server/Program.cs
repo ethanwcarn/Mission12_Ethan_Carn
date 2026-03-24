@@ -21,12 +21,25 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
+// Distinct category labels for the client filter dropdown (no hardcoded list).
+app.MapGet("/api/categories", async (BookstoreContext db) =>
+{
+    var categories = await db.Books
+        .Select(b => b.Category)
+        .Distinct()
+        .OrderBy(c => c)
+        .ToListAsync();
+
+    return Results.Json(categories);
+});
+
 app.MapGet("/api/books", async (
     BookstoreContext db,
     int? page,
     int? pageSize,
     string? sort,
-    string? dir) =>
+    string? dir,
+    string? category) =>
 {
     // Rubric: default pagination is 5 books per page.
     var effectivePage = page.HasValue && page.Value > 0 ? page.Value : 1;
@@ -37,6 +50,13 @@ app.MapGet("/api/books", async (
     var sortDir = (dir ?? "asc").Trim().ToLowerInvariant();
 
     IQueryable<Book> query = db.Books;
+
+    // Optional filter: applied before count + pagination so totalPages matches the filtered set.
+    if (!string.IsNullOrWhiteSpace(category))
+    {
+        var cat = category.Trim();
+        query = query.Where(b => b.Category == cat);
+    }
 
     if (sortKey == "title")
     {

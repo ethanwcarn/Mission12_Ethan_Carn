@@ -10,8 +10,14 @@ import { useCart } from '../useCart'
 // size resets to page 1 so we do not request an out-of-range page. The API filters before it
 // counts and pages, so totalPages/totalCount match the selected category; pagination links are
 // built from that filtered total. If the server clamps page (e.g. fewer pages after a filter),
-// we write the corrected page/pageSize back into the URL. Toast / Offcanvas are the two
-// Bootstrap extras; the grid uses Bootstrap columns for the table vs. cart summary.
+// we write the corrected page/pageSize back into the URL.
+//
+// === TWO NEW BOOTSTRAP COMPONENTS (not covered in class videos) ===
+// 1. Bootstrap Toast  — "Added to cart" notification (see <div class="toast-container"> below)
+//    Uses the Bootstrap Toast JS API: Toast.getOrCreateInstance(el).show()
+// 2. Bootstrap Offcanvas — mobile cart-summary drawer (see <div class="offcanvas offcanvas-end"> below)
+//    Toggled via data-bs-toggle="offcanvas" / data-bs-target="#cartOffcanvas"
+// Both components are imported from 'bootstrap/dist/js/bootstrap.bundle.min.js' in main.tsx.
 
 type Book = {
   bookId: number
@@ -198,6 +204,7 @@ export function BookListPage() {
 
   return (
     <>
+      {/* NEW BOOTSTRAP #1: Toast — "Added to cart" notification */}
       <div className="toast-container position-fixed top-0 end-0 p-3" style={{ zIndex: 1080 }}>
         <div
           ref={toastRef}
@@ -215,6 +222,7 @@ export function BookListPage() {
         </div>
       </div>
 
+      {/* NEW BOOTSTRAP #2: Offcanvas — mobile cart-summary slide-in drawer */}
       <div className="offcanvas offcanvas-end" tabIndex={-1} id="cartOffcanvas" aria-labelledby="cartOffcanvasLabel">
         <div className="offcanvas-header">
           <h2 className="offcanvas-title h5" id="cartOffcanvasLabel">

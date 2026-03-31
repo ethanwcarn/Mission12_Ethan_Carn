@@ -1,5 +1,10 @@
 node_modules/
 
+# Assignment docs and grading artifacts (not needed in repo)
+*.pdf
+rubric.txt
+debug.log
+
 # IDE / tooling artifacts
 .vs/
 /.vscode/

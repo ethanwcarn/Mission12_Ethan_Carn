@@ -106,4 +106,71 @@ app.MapGet("/api/books", async (
     };
 });
 
+// POST /api/books — Add a new book to the database.
+// The client sends a JSON body with all book fields except BookID (SQLite assigns that automatically).
+// We validate that the required string fields are not blank before saving.
+app.MapPost("/api/books", async (BookstoreContext db, Book book) =>
+{
+    // Guard against blank required fields so the database doesn't get junk records.
+    if (string.IsNullOrWhiteSpace(book.Title) ||
+        string.IsNullOrWhiteSpace(book.Author) ||
+        string.IsNullOrWhiteSpace(book.Publisher) ||
+        string.IsNullOrWhiteSpace(book.ISBN))
+    {
+        return Results.BadRequest("Title, Author, Publisher, and ISBN are required.");
+    }
+
+    // EF Core tracks the new entity; SaveChangesAsync writes it and populates BookID via the DB.
+    db.Books.Add(book);
+    await db.SaveChangesAsync();
+
+    // 201 Created with a Location header pointing to the new resource.
+    return Results.Created($"/api/books/{book.BookID}", book);
+});
+
+// PUT /api/books/{id} — Update every editable field on an existing book.
+// Returns 404 if the book is not found so the client knows the ID was invalid.
+app.MapPut("/api/books/{id}", async (BookstoreContext db, int id, Book updated) =>
+{
+    // Look up the tracked entity; FindAsync hits the identity cache before going to the DB.
+    var book = await db.Books.FindAsync(id);
+    if (book is null)
+    {
+        return Results.NotFound($"Book with ID {id} not found.");
+    }
+
+    // Copy every editable field from the incoming payload onto the tracked entity.
+    // EF Core's change tracker will detect these property changes and emit an UPDATE statement.
+    book.Title          = updated.Title;
+    book.Author         = updated.Author;
+    book.Publisher      = updated.Publisher;
+    book.ISBN           = updated.ISBN;
+    book.Classification = updated.Classification;
+    book.Category       = updated.Category;
+    book.PageCount      = updated.PageCount;
+    book.Price          = updated.Price;
+
+    await db.SaveChangesAsync();
+
+    // Return the full updated record so the client can refresh its local state without a second fetch.
+    return Results.Ok(book);
+});
+
+// DELETE /api/books/{id} — Remove a book from the database permanently.
+// Returns 404 if the book does not exist, 204 No Content on success (nothing left to return).
+app.MapDelete("/api/books/{id}", async (BookstoreContext db, int id) =>
+{
+    var book = await db.Books.FindAsync(id);
+    if (book is null)
+    {
+        return Results.NotFound($"Book with ID {id} not found.");
+    }
+
+    db.Books.Remove(book);
+    await db.SaveChangesAsync();
+
+    // 204 No Content: the resource no longer exists, so there is no body to send back.
+    return Results.NoContent();
+});
+
 app.Run();

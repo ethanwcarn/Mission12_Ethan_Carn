@@ -9,6 +9,7 @@ import App from './App.tsx'
 import { CartProvider } from './CartProvider.tsx'
 import { BookListPage } from './pages/BookListPage.tsx'
 import { CartPage } from './pages/CartPage.tsx'
+import { AdminBooksPage } from './pages/AdminBooksPage.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -18,6 +19,8 @@ createRoot(document.getElementById('root')!).render(
           <Route element={<App />}>
             <Route path="/" element={<BookListPage />} />
             <Route path="/cart" element={<CartPage />} />
+            {/* Admin CRUD page — lets staff add, edit, and delete books in the database */}
+            <Route path="/adminbooks" element={<AdminBooksPage />} />
           </Route>
         </Routes>
       </CartProvider>

@@ -26,6 +26,10 @@ function Layout() {
             <Link className="nav-link" to="/cart" onClick={handleCartNavClick}>
               Cart
             </Link>
+            {/* Admin link gives staff direct access to the book management page */}
+            <Link className="nav-link" to="/adminbooks">
+              Admin
+            </Link>
           </div>
         </div>
       </nav>

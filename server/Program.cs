@@ -9,7 +9,10 @@ builder.Services.AddOpenApi();
 
 // EF Core + SQLite database configuration.
 // The SQLite file lives at the workspace root (../Bookstore.sqlite relative to this server project folder).
-var dbPath = Path.GetFullPath(Path.Combine(builder.Environment.ContentRootPath, "..", "Bookstore.sqlite"));
+// In production (Azure), override DB_PATH via an app setting to a writable location.
+// In dev, fall back to the SQLite file at the workspace root.
+var dbPath = builder.Configuration["DbPath"]
+    ?? Path.GetFullPath(Path.Combine(builder.Environment.ContentRootPath, "..", "Bookstore.sqlite"));
 builder.Services.AddDbContext<BookstoreContext>(options =>
     options.UseSqlite($"Data Source={dbPath}"));
 
@@ -20,6 +23,10 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
+
+// Serve the React build from wwwroot and fall back to index.html for client-side routing.
+app.UseDefaultFiles();
+app.UseStaticFiles();
 
 // Distinct category labels for the client filter dropdown (no hardcoded list).
 app.MapGet("/api/categories", async (BookstoreContext db) =>
@@ -172,5 +179,8 @@ app.MapDelete("/api/books/{id}", async (BookstoreContext db, int id) =>
     // 204 No Content: the resource no longer exists, so there is no body to send back.
     return Results.NoContent();
 });
+
+// SPA fallback: any non-API route returns index.html so React Router handles it.
+app.MapFallbackToFile("index.html");
 
 app.Run();
